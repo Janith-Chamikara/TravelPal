@@ -10,8 +10,8 @@ namespace TravelPal.UI
 
         public LoginForm(AuthService authService, TokenService tokenService)
         {
-           _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-           _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
+           _authService = authService;
+           _tokenService = tokenService;
            InitializeUI();
         }
 
@@ -117,6 +117,18 @@ namespace TravelPal.UI
             {
                 // Show loading indicator
                 Cursor = Cursors.WaitCursor;
+
+                if (string.IsNullOrWhiteSpace(username))
+                {
+                     MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                     return;
+                }
+
+                if (string.IsNullOrWhiteSpace(password))
+                {
+                     MessageBox.Show("Password is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                     return;
+                }
 
                 // Attempt to login
                 var user = await _authService.LoginAsync(username, password);

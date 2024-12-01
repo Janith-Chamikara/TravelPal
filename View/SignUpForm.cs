@@ -8,11 +8,11 @@ namespace TravelPal.UI
         private readonly AuthService _authService;
         private readonly TokenService _tokenService;
         public SignUpForm(AuthService authService, TokenService tokenService)
-{
-    _authService = authService ?? throw new ArgumentNullException(nameof(authService));
-    _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
-    InitializeUI();
-}
+        {
+            _authService = authService ;
+            _tokenService = tokenService ;
+            InitializeUI();
+        }
 
         private void InitializeUI()
         {
@@ -35,9 +35,9 @@ namespace TravelPal.UI
             }
 
             // Full Name Label
-            var fullNameLabel = new Label()
+            var emailLabel = new Label()
             {
-                Text = "Full Name",
+                Text = "Email",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 12),
                 Location = new Point(50, 50),
@@ -45,7 +45,7 @@ namespace TravelPal.UI
             };
 
             // Full Name TextBox
-            var fullNameTextBox = new TextBox()
+            var emailTextBox = new TextBox()
             {
                 Location = new Point(50, 80),
                 Width = 300,
@@ -108,7 +108,7 @@ namespace TravelPal.UI
                 FlatStyle = FlatStyle.Flat
             };
             signUpButton.FlatAppearance.BorderSize = 0;
-            signUpButton.Click += (sender, e) => SignUpButton_Click(sender, e, usernameTextBox.Text, fullNameTextBox.Text, passwordTextBox.Text);
+            signUpButton.Click += (sender, e) => SignUpButton_Click(sender, e, usernameTextBox.Text, emailTextBox.Text, passwordTextBox.Text);
 
 
             // Login Link
@@ -126,8 +126,8 @@ namespace TravelPal.UI
             loginLink.LinkClicked += (sender, e) => LoginLink_Click(sender, e);
 
             // Add Controls to Form
-            gradientPanel.Controls.Add(fullNameLabel);
-            gradientPanel.Controls.Add(fullNameTextBox);
+            gradientPanel.Controls.Add(emailLabel);
+            gradientPanel.Controls.Add(emailTextBox);
             gradientPanel.Controls.Add(usernameLabel);
             gradientPanel.Controls.Add(usernameTextBox);
             gradientPanel.Controls.Add(passwordLabel);
@@ -144,6 +144,23 @@ namespace TravelPal.UI
                 // Show loading indicator
                 Cursor = Cursors.WaitCursor;
 
+                if (string.IsNullOrWhiteSpace(username))
+                {
+                     MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                     return;
+                }
+
+                if (string.IsNullOrWhiteSpace(fullName))
+                {
+                     MessageBox.Show("Email is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                     return;
+                }
+
+                if (string.IsNullOrWhiteSpace(password))
+                {
+                     MessageBox.Show("Password is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                     return;
+                }
                 // Attempt to login
                 var user = await _authService.RegisterAsync(username,fullName, password);
 
