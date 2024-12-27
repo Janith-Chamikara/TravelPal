@@ -19,5 +19,13 @@ namespace TravelPal.Models
         public required string PasswordHash { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public Location UserLocation { get; set; }
+    }
+
+    public class Location
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

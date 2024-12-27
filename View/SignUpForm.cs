@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
 using TravelPal.Services;
 
 namespace TravelPal.UI
@@ -9,8 +9,8 @@ namespace TravelPal.UI
         private readonly TokenService _tokenService;
         public SignUpForm(AuthService authService, TokenService tokenService)
         {
-            _authService = authService ;
-            _tokenService = tokenService ;
+            _authService = authService;
+            _tokenService = tokenService;
             InitializeUI();
         }
 
@@ -122,7 +122,7 @@ namespace TravelPal.UI
             };
             loginLink.LinkColor = Color.White;  // Set the color of the link text
             loginLink.VisitedLinkColor = Color.White; // Color after the link is clicked
-            loginLink.ActiveLinkColor = Color.Gray; 
+            loginLink.ActiveLinkColor = Color.Gray;
             loginLink.LinkClicked += (sender, e) => LoginLink_Click(sender, e);
 
             // Add Controls to Form
@@ -146,40 +146,39 @@ namespace TravelPal.UI
 
                 if (string.IsNullOrWhiteSpace(username))
                 {
-                     MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                     return;
+                    MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
                 if (string.IsNullOrWhiteSpace(fullName))
                 {
-                     MessageBox.Show("Email is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                     return;
+                    MessageBox.Show("Email is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
                 if (string.IsNullOrWhiteSpace(password))
                 {
-                     MessageBox.Show("Password is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                     return;
+                    MessageBox.Show("Password is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
                 // Attempt to login
-                var user = await _authService.RegisterAsync(username,fullName, password);
+                var user = await _authService.RegisterAsync(username, fullName, password);
 
                 // Generate token for the user
                 var token = _tokenService.GenerateToken(user.Id);
 
-                MessageBox.Show("Sign Up Successful!", "Success", 
+                MessageBox.Show("Sign Up Successful!", "Success",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Hide the login form
                 this.Hide();
 
-                // Open dashboard with the authenticated user
-                var dashboard = Program.ServiceProvider.GetRequiredService<DashboardForm>();
+                var dashboard = Program.ServiceProvider.GetRequiredService<LoginForm>();
                 dashboard.Show();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Login Failed", 
+                MessageBox.Show(ex.Message, "Login Failed",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
