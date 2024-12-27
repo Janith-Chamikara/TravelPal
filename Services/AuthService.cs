@@ -19,7 +19,7 @@ namespace TravelPal.Services
         public async Task<User> RegisterAsync(string username, string email, string password)
         {
             // Check if user already exists
-            var existingUser = await _users.Find(u => 
+            var existingUser = await _users.Find(u =>
                 u.Username == username || u.Email == email).FirstOrDefaultAsync();
 
             if (existingUser != null)

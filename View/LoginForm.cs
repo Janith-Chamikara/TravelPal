@@ -1,5 +1,6 @@
 using TravelPal.Services;
-using Microsoft.Extensions.DependencyInjection; 
+using Microsoft.Extensions.DependencyInjection;
+using TravelPal.Sessions;
 
 namespace TravelPal.UI
 {
@@ -10,9 +11,9 @@ namespace TravelPal.UI
 
         public LoginForm(AuthService authService, TokenService tokenService)
         {
-           _authService = authService;
-           _tokenService = tokenService;
-           InitializeUI();
+            _authService = authService;
+            _tokenService = tokenService;
+            InitializeUI();
         }
 
         private void InitializeUI()
@@ -27,7 +28,7 @@ namespace TravelPal.UI
             var gradientPanel = new Panel() { Dock = DockStyle.Fill };
             var color1 = Color.FromArgb(40, 40, 40);
             var color2 = Color.FromArgb(70, 70, 70);
-            
+
             // Use a more reliable way to create gradient background
             gradientPanel.Paint += (sender, e) =>
             {
@@ -98,7 +99,7 @@ namespace TravelPal.UI
             };
             signUpLink.LinkColor = Color.White;
             signUpLink.VisitedLinkColor = Color.White;
-            signUpLink.ActiveLinkColor = Color.Gray; 
+            signUpLink.ActiveLinkColor = Color.Gray;
             signUpLink.LinkClicked += (sender, e) => SignUpLink_Click(sender!, e);
 
             // Add Controls to Form
@@ -120,23 +121,25 @@ namespace TravelPal.UI
 
                 if (string.IsNullOrWhiteSpace(username))
                 {
-                     MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                     return;
+                    MessageBox.Show("Username is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
                 if (string.IsNullOrWhiteSpace(password))
                 {
-                     MessageBox.Show("Password is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                     return;
+                    MessageBox.Show("Password is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
                 // Attempt to login
                 var user = await _authService.LoginAsync(username, password);
 
+                UserSession.Instance.SetUserSession(user);
+
                 // Generate token for the user
                 var token = _tokenService.GenerateToken(user.Id ?? throw new InvalidOperationException("User ID is null"));
 
-                MessageBox.Show("Login Successful!", "Success", 
+                MessageBox.Show("Login Successful!", "Success",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Hide the login form
@@ -148,7 +151,7 @@ namespace TravelPal.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Login Failed", 
+                MessageBox.Show(ex.Message, "Login Failed",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
