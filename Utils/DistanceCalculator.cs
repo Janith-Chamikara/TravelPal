@@ -7,12 +7,12 @@ namespace TravelPal.Utils
     {
         private const double EarthRadiusKm = 6371;
 
-        public static double CalculateDistance(Node node1, Node node2)
+        public static double CalculateDistance(double lati1, double longi1, double lati2, double longi2)
         {
-            double lat1 = ToRadians(node1.Latitude);
-            double lon1 = ToRadians(node1.Longitude);
-            double lat2 = ToRadians(node2.Latitude);
-            double lon2 = ToRadians(node2.Longitude);
+            double lat1 = ToRadians(lati1);
+            double lon1 = ToRadians(longi1);
+            double lat2 = ToRadians(lati2);
+            double lon2 = ToRadians(longi2);
 
             double dLat = lat2 - lat1;
             double dLon = lon2 - lon1;
