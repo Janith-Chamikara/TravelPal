@@ -2,8 +2,8 @@ const { MongoClient } = require("mongodb");
 const XLSX = require("xlsx");
 
 // Configuration - update these values
-const MONGODB_URI = "mongodb://localhost:27017";
-const DATABASE_NAME = "your_database_name";
+const MONGODB_URI = "mongodb+srv://janithchamikara2021:6ggVGzrWK3zCUlwc@cluster0.ci036.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DATABASE_NAME = "Cluster0";
 const EXCEL_FILE_PATH = "./categories.xlsx"; // Update with your Excel file path
 const SHEET_NAME = "Sheet1"; // Update with your sheet name
 

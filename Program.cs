@@ -11,6 +11,7 @@ static class Program
 {
     public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
+
     [STAThread]
     static void Main()
     {
@@ -24,46 +25,48 @@ static class Program
 
         // Create and configure graph with OSM data
         var graph = new CustomGraph();
-        var osmLoader = new OsmDataLoader(graph);
+        // var osmLoader = new OsmDataLoader(graph);
 
-        // Load OSM data at startup
-        try
-        {
-            Console.WriteLine("Loading OSM data...");
-            string osmFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "sri-lanka-latest.osm.pbf");
+        // // Load OSM data at startup
+        // try
+        // {
+        //     Console.WriteLine("Loading OSM data...");
+        //     string projectBaseDirectory = Directory.GetCurrentDirectory(); // Gets the root directory of the project
+        //     string osmFilePath = Path.Combine(projectBaseDirectory, "Assets", "sri-lanka-latest.osm.pbf");
 
-            if (!File.Exists(osmFilePath))
-            {
-                MessageBox.Show($"OSM file not found at: {osmFilePath}",
-                              "File Not Found",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Error);
-                return;
-            }
 
-            osmLoader.LoadOsmData(osmFilePath);
-            Console.WriteLine($"OSM data loaded successfully! Total nodes: {graph.NodeCount()}");
+        //     if (!File.Exists(osmFilePath))
+        //     {
+        //         MessageBox.Show($"OSM file not found at: {osmFilePath}",
+        //                       "File Not Found",
+        //                       MessageBoxButtons.OK,
+        //                       MessageBoxIcon.Error);
+        //         return;
+        //     }
 
-            if (graph.NodeCount() == 0)
-            {
-                MessageBox.Show("No nodes were loaded from the OSM file. Please check the data.",
-                              "Warning",
-                              MessageBoxButtons.OK,
-                              MessageBoxIcon.Warning);
-            }
-            else
-            {
-                Console.WriteLine($"Successfully loaded {graph.NodeCount()} nodes");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading OSM data: {ex.Message}");
-            MessageBox.Show($"Error loading OSM data: {ex.Message}\n\nStack Trace: {ex.StackTrace}",
-                          "Error",
-                          MessageBoxButtons.OK,
-                          MessageBoxIcon.Error);
-        }
+        //     osmLoader.LoadOsmData(osmFilePath);
+        //     Console.WriteLine($"OSM data loaded successfully! Total nodes: {graph.NodeCount()}");
+
+        //     if (graph.NodeCount() == 0)
+        //     {
+        //         MessageBox.Show("No nodes were loaded from the OSM file. Please check the data.",
+        //                       "Warning",
+        //                       MessageBoxButtons.OK,
+        //                       MessageBoxIcon.Warning);
+        //     }
+        //     else
+        //     {
+        //         Console.WriteLine($"Successfully loaded {graph.NodeCount()} nodes");
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine($"Error loading OSM data: {ex.Message}");
+        //     MessageBox.Show($"Error loading OSM data: {ex.Message}\n\nStack Trace: {ex.StackTrace}",
+        //                   "Error",
+        //                   MessageBoxButtons.OK,
+        //                   MessageBoxIcon.Error);
+        // }
 
         // Register services
         services.AddSingleton(new MongoDbService(connectionString, databaseName));
@@ -72,7 +75,7 @@ static class Program
 
         // Register graph services
         services.AddSingleton(graph);  // Register the pre-loaded graph
-        services.AddSingleton(osmLoader);
+        // services.AddSingleton(osmLoader);
 
         // Register forms
         services.AddTransient<LoginForm>();
