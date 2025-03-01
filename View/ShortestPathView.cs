@@ -281,7 +281,7 @@ public class ShortestPathView : Form
 
         double distance = CalculateDistance(startLat, startLon, endLat, endLon);
 
-        resultLabel.Text = $"Actual Distance : {route.Distance:F2} km | Calculated Distance from Heaviside formula : {distance:F2} km";
+        resultLabel.Text = $"Actual Distance : {route.Distance:F2} km | Calculated Distance from Haversine Formula (Great-Circle Distance): {distance:F2} km";
     }
     public void SetCoordinates(double startLat, double startLon, double endLat, double endLon)
     {
