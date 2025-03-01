@@ -125,6 +125,55 @@ public class ShortestPathView : Form
         gMapControl.RoutesEnabled = true;
     }
 
+    // private async void CalculateButton_Click(object sender, EventArgs e)
+    // {
+    //     try
+    //     {
+    //         if (!ValidateInputs())
+    //         {
+    //             MessageBox.Show("Please enter valid coordinates.",
+    //                           "Validation Error",
+    //                           MessageBoxButtons.OK,
+    //                           MessageBoxIcon.Warning);
+    //             return;
+    //         }
+
+    //         calculateButton.Enabled = false;
+    //         this.Cursor = Cursors.WaitCursor;
+    //         resultLabel.Text = "Calculating path...";
+
+    //         double startLat = double.Parse(startLatTextBox.Text);
+    //         double startLon = double.Parse(startLonTextBox.Text);
+    //         double endLat = double.Parse(endLatTextBox.Text);
+    //         double endLon = double.Parse(endLonTextBox.Text);
+
+    //         // var path = await Task.Run(() => _graph.FindShortestPath(startLat, startLon, endLat, endLon));
+
+    //         // if (path == null || path.Count == 0)
+    //         // {
+    //         //     resultLabel.Text = "No path found between these points.";
+    //         //     MessageBox.Show("No path found. Try coordinates closer to roads.",
+    //         //                   "No Path Found",
+    //         //                   MessageBoxButtons.OK,
+    //         //                   MessageBoxIcon.Information);
+    //         //     return;
+    //         // }
+
+    //         PlotLocations(startLat, startLon, endLat, endLon);
+
+    //         // DisplayPathOnMap(path);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //         resultLabel.Text = "Error finding path.";
+    //     }
+    //     finally
+    //     {
+    //         calculateButton.Enabled = true;
+    //         this.Cursor = Cursors.Default;
+    //     }
+    // }
     private async void CalculateButton_Click(object sender, EventArgs e)
     {
         try
@@ -147,21 +196,48 @@ public class ShortestPathView : Form
             double endLat = double.Parse(endLatTextBox.Text);
             double endLon = double.Parse(endLonTextBox.Text);
 
-            // var path = await Task.Run(() => _graph.FindShortestPath(startLat, startLon, endLat, endLon));
+            // Use Google or OpenStreetMap routing provider
+            var route = await Task.Run(() =>
+            {
+                var start = new PointLatLng(startLat, startLon);
+                var end = new PointLatLng(endLat, endLon);
 
-            // if (path == null || path.Count == 0)
-            // {
-            //     resultLabel.Text = "No path found between these points.";
-            //     MessageBox.Show("No path found. Try coordinates closer to roads.",
-            //                   "No Path Found",
-            //                   MessageBoxButtons.OK,
-            //                   MessageBoxIcon.Information);
-            //     return;
-            // }
+                // Choose a routing provider that's available in your version of GMap.NET
+                // Option 1: Google Directions (may need API key)
+                // GMapProviders.GoogleMap.ApiKey = "YOUR_API_KEY"; 
+                // var routeProvider = GMapProviders.GoogleMap;
 
-            PlotLocations(startLat, startLon, endLat, endLon);
+                // Option 2: OpenRouteService (simpler option)
+                var routeProvider = GMapProviders.OpenStreetMap;
 
-            // DisplayPathOnMap(path);
+                // Get the route
+                MapRoute route = null;
+                try
+                {
+                    route = routeProvider.GetRoute(start, end, false, false, (int)gMapControl.Zoom);
+                }
+                catch
+                {
+                    // If that fails, try a direct line with waypoints
+                    var points = new List<PointLatLng>() { start, end };
+                    route = new MapRoute(points, "Direct Route");
+                }
+
+                return route;
+            });
+
+            if (route != null)
+            {
+                DisplayRoute(route, startLat, startLon, endLat, endLon);
+            }
+            else
+            {
+                resultLabel.Text = "No route found between these points.";
+                MessageBox.Show("No route found. Try coordinates closer to roads.",
+                              "No Route Found",
+                              MessageBoxButtons.OK,
+                              MessageBoxIcon.Information);
+            }
         }
         catch (Exception ex)
         {
@@ -173,6 +249,39 @@ public class ShortestPathView : Form
             calculateButton.Enabled = true;
             this.Cursor = Cursors.Default;
         }
+    }
+
+    private void DisplayRoute(MapRoute route, double startLat, double startLon, double endLat, double endLon)
+    {
+        gMapControl.Overlays.Clear();
+
+        GMapOverlay markersOverlay = new GMapOverlay("markers");
+        GMapOverlay routeOverlay = new GMapOverlay("routes");
+
+        GMarkerGoogle startMarker = new GMarkerGoogle(
+            new PointLatLng(startLat, startLon),
+            GMarkerGoogleType.green
+        );
+        GMarkerGoogle endMarker = new GMarkerGoogle(
+            new PointLatLng(endLat, endLon),
+            GMarkerGoogleType.red
+        );
+
+        markersOverlay.Markers.Add(startMarker);
+        markersOverlay.Markers.Add(endMarker);
+
+        GMapRoute mapRoute = new GMapRoute(route.Points, "Route");
+        mapRoute.Stroke = new Pen(Color.Blue, 3);
+        routeOverlay.Routes.Add(mapRoute);
+
+        gMapControl.Overlays.Add(markersOverlay);
+        gMapControl.Overlays.Add(routeOverlay);
+
+        gMapControl.ZoomAndCenterRoute(mapRoute);
+
+        double distance = CalculateDistance(startLat, startLon, endLat, endLon);
+
+        resultLabel.Text = $"Actual Distance : {route.Distance:F2} km | Calculated Distance from Heaviside formula : {distance:F2} km";
     }
     public void SetCoordinates(double startLat, double startLon, double endLat, double endLon)
     {

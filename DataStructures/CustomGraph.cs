@@ -37,7 +37,7 @@ namespace TravelPal.DataStructures
 
             if (!fromNode.Neighbors.ContainsKey(toNode))
             {
-                double distance = DistanceCalculator.CalculateDistance(fromNode, toNode);
+                double distance = DistanceCalculator.CalculateDistance(fromNode.Latitude, fromNode.Longitude, toNode.Latitude, toNode.Longitude);
                 fromNode.Neighbors[toNode] = distance;
                 toNode.Neighbors[fromNode] = distance; // Assuming undirected graph
             }
@@ -85,13 +85,13 @@ namespace TravelPal.DataStructures
             // Only search nodes within reasonable distance
             var nearbyNodes = nodes.Values.Where(n =>
             {
-                double distance = DistanceCalculator.CalculateDistance(tempNode, n);
+                double distance = DistanceCalculator.CalculateDistance(tempNode.Latitude,tempNode.Longitude, n.Latitude, n.Longitude);
                 return distance <= MAX_SEARCH_RADIUS;
             });
 
             foreach (var node in nearbyNodes)
             {
-                double distance = DistanceCalculator.CalculateDistance(tempNode, node);
+                double distance = DistanceCalculator.CalculateDistance(tempNode.Latitude, tempNode.Longitude, node.Latitude, node.Longitude);
                 if (distance < minDistance)
                 {
                     minDistance = distance;
@@ -104,7 +104,7 @@ namespace TravelPal.DataStructures
                 // If no nodes found within MAX_SEARCH_RADIUS, try finding the closest node regardless of distance
                 foreach (var node in nodes.Values)
                 {
-                    double distance = DistanceCalculator.CalculateDistance(tempNode, node);
+                    double distance = DistanceCalculator.CalculateDistance(tempNode.Latitude, tempNode.Longitude, node.Latitude, node.Longitude);
                     if (distance < minDistance)
                     {
                         minDistance = distance;
@@ -204,7 +204,7 @@ namespace TravelPal.DataStructures
 
         private double CalculateDistance(Node node1, Node node2)
         {
-            return DistanceCalculator.CalculateDistance(node1, node2);
+            return DistanceCalculator.CalculateDistance(node1.Latitude, node1.Longitude, node2.Latitude, node2.Longitude);
         }
 
         public int NodeCount()
