@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TravelPal.Utils;
 
@@ -44,6 +45,8 @@ namespace TravelPal.DataStructures
 
         public List<Node> FindShortestPath(double startLat, double startLon, double endLat, double endLon)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             if (nodes.Count == 0)
             {
                 throw new InvalidOperationException("Graph is empty. No nodes loaded.");
@@ -65,7 +68,8 @@ namespace TravelPal.DataStructures
 
             Console.WriteLine($"Found start node: {startNode.Id} ({startNode.Latitude}, {startNode.Longitude})");
             Console.WriteLine($"Found end node: {endNode.Id} ({endNode.Latitude}, {endNode.Longitude})");
-
+            stopwatch.Stop();
+            Console.WriteLine($"Execution Time for FindShortestPath: {stopwatch.ElapsedMilliseconds} ms");
             return DijkstraAlgorithm(startNode, endNode);
         }
 
@@ -114,6 +118,9 @@ namespace TravelPal.DataStructures
 
         private List<Node> DijkstraAlgorithm(Node start, Node end)
         {
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
             var distances = new Dictionary<Node, double>();
             var previous = new Dictionary<Node, Node>();
             var unvisited = new HashSet<Node>();
@@ -191,6 +198,7 @@ namespace TravelPal.DataStructures
             }
 
             Console.WriteLine($"Path found with {path.Count} nodes");
+            stopwatch.Stop();
             return path;
         }
 

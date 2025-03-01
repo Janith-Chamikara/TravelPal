@@ -10,7 +10,7 @@ namespace TravelPal.UI
     {
         private readonly MongoDbService _mongoDbService;
         private readonly CustomGraph _graph;
-        private readonly OsmDataLoader _dataLoader;
+        // private readonly OsmDataLoader _dataLoader;
         private readonly TravelLocationList locationList;
         private TextBox searchBox;
         private TextBox locationNameBox;
@@ -19,12 +19,12 @@ namespace TravelPal.UI
         private RoundedButton removeButton;
         private RoundedButton searchButton;
 
-        public TravelLocationsForm(MongoDbService mongoDbService, CustomGraph graph, OsmDataLoader dataLoader)
+        public TravelLocationsForm(MongoDbService mongoDbService, CustomGraph graph)
         {
             _mongoDbService = mongoDbService;
             locationList = new TravelLocationList();
             _graph = graph;
-            _dataLoader = dataLoader;
+            // _dataLoader = dataLoader;
             InitializeComponents();
             LoadUserLocations();
         }
@@ -208,7 +208,7 @@ namespace TravelPal.UI
 
                 if (location != null)
                 {
-                    var recommendedForm = new RecommendedLocationsForm(location, _mongoDbService, _graph, _dataLoader);
+                    var recommendedForm = new RecommendedLocationsForm(location, _mongoDbService, _graph);
                     recommendedForm.Show();
                 }
             }

@@ -13,15 +13,15 @@ public class RecommendedLocationsForm : Form
     private List<string> preferenceIds;
     private readonly MongoDbService _mongoDbService;
     private readonly CustomGraph _graph;
-    private readonly OsmDataLoader _dataLoader;
+    // private readonly OsmDataLoader _dataLoader;
     private FoursquareResponse apiResults;
 
-    public RecommendedLocationsForm(TravelLocation location, MongoDbService mongoDbService, CustomGraph graph, OsmDataLoader dataLoader)
+    public RecommendedLocationsForm(TravelLocation location, MongoDbService mongoDbService, CustomGraph graph)
     {
         selectedLocation = location;
         _mongoDbService = mongoDbService;
         _graph = graph;
-        _dataLoader = dataLoader;
+        // _dataLoader = dataLoader;
         InitializeComponents();
         LoadRecommendedLocations();
     }
@@ -177,7 +177,7 @@ public class RecommendedLocationsForm : Form
                 return;
             }
 
-            var shortestPathView = new ShortestPathView(_graph, _dataLoader);
+            var shortestPathView = new ShortestPathView(_graph);
             var userLocation = UserSession.Instance.UserLocation;
 
             // Debug information
