@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MongoDB.Driver;
+using TravelPal.Algorithms;
 using TravelPal.DataStructures;
 using TravelPal.Services;
 using TravelPal.Sessions;
@@ -29,6 +30,7 @@ namespace TravelPal.UI
             LoadUserLocations();
         }
 
+        private ComboBox filterBox;
         private void InitializeComponents()
         {
             this.Text = "My Travel Locations";
@@ -98,6 +100,34 @@ namespace TravelPal.UI
             removeButton.Click += RemoveButton_Click;
 
             addPanel.Controls.AddRange(new Control[] { locationNameBox, addButton, removeButton });
+
+            Label filterLabel = new Label
+            {
+                Text = "Filter by:",
+                Location = new Point(440, 10),
+                Font = new Font("Segoe UI", 10),
+                AutoSize = true
+            };
+            addPanel.Controls.Add(filterLabel);
+
+            filterBox = new ComboBox
+            {
+                Location = new Point(530, 8), 
+                Width = 190,
+                Font = new Font("Segoe UI", 10),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            filterBox.Items.Add("Date & time");
+            filterBox.Items.Add("Alphabetically");
+            filterBox.Items.Add("Date & time (reverse)");
+
+            filterBox.SelectedIndex = 0;
+
+            filterBox.SelectedIndexChanged += FilterBox_SelectedIndexChanged;
+
+            addPanel.Controls.Add(filterBox);
+
 
             // Locations ListView
             locationListView = new ListView
@@ -245,6 +275,45 @@ namespace TravelPal.UI
                 MessageBox.Show("Location not found");
             }
         }
+
+        private void FilterBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedValue = filterBox.SelectedItem.ToString();
+            string message = "";
+            locationListView.Items.Clear();
+            var locations = locationList.GetAllLocations();
+
+            if (selectedValue == "Date & time")
+            {
+                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+            }
+            else if (selectedValue == "Alphabetically")
+            {
+                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+            }
+            else if (selectedValue == "Date & time (reverse)")
+            {
+                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+            }
+
+
+            foreach (var location in locations)
+            {
+                var item = new ListViewItem(new[]
+                {
+                    location.LocationName,
+                    location.Latitude.ToString("F6"),
+                    location.Longitude.ToString("F6"),
+                    location.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
+                });
+                locationListView.Items.Add(item);
+            }
+        }
+
+
 
         private async Task<(double lat, double lon)?> GetCoordinatesFromName(string locationName)
         {
