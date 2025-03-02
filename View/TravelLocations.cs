@@ -111,8 +111,9 @@ namespace TravelPal.UI
             locationListView.Columns.AddRange(new ColumnHeader[]
             {
             new ColumnHeader { Text = "Location Name", Width = 200 },
-            new ColumnHeader { Text = "Latitude", Width = 100 },
-            new ColumnHeader { Text = "Longitude", Width = 100 },
+            new ColumnHeader { Text = "Latitude", Width = 120 },
+            new ColumnHeader { Text = "Longitude", Width = 120 },
+            new ColumnHeader { Text = "Created at", Width = 200 },
             new ColumnHeader { Text = "View more",Width = 1}
             });
 
@@ -134,7 +135,7 @@ namespace TravelPal.UI
 
                 foreach (var location in locations)
                 {
-                    locationList.AddLocation(location.LocationName, location.Latitude, location.Longitude);
+                    locationList.AddLocation(location.LocationName, location.Latitude, location.Longitude, location.CreatedAt);
                 }
 
                 RefreshLocationsList();
@@ -155,7 +156,8 @@ namespace TravelPal.UI
                 {
                 location.LocationName,
                 location.Latitude.ToString("F6"),
-                location.Longitude.ToString("F6")
+                location.Longitude.ToString("F6"),
+                location.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
             });
                 locationListView.Items.Add(item);
             }
@@ -234,7 +236,8 @@ namespace TravelPal.UI
                 {
                 location.LocationName,
                 location.Latitude.ToString("F6"),
-                location.Longitude.ToString("F6")
+                location.Longitude.ToString("F6"),
+                location.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
             }));
             }
             else

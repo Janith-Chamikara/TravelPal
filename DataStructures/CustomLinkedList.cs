@@ -7,15 +7,16 @@ namespace TravelPal.DataStructures
         public string LocationName { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-
+        public DateTime CreatedAt { get; set; }
         public TravelLocationNode Next { get; set; }
         public TravelLocationNode Previous { get; set; }
 
-        public TravelLocationNode(string name, double lat, double lon)
+        public TravelLocationNode(string name, double lat, double lon, DateTime createdAt)
         {
             LocationName = name;
             Latitude = lat;
             Longitude = lon;
+            CreatedAt = createdAt;
             Next = null;
             Previous = null;
         }
@@ -41,9 +42,9 @@ namespace TravelPal.DataStructures
             Count = 0;
         }
 
-        public void AddLocation(string name, double lat, double lon)
+        public void AddLocation(string name, double lat, double lon, DateTime createdAt)
         {
-            var newNode = new TravelLocationNode(name, lat, lon);
+            var newNode = new TravelLocationNode(name, lat, lon, createdAt);
 
             if (head == null)
             {

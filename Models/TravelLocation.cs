@@ -12,4 +12,11 @@ public class TravelLocation
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public List<string> Preferences { get; set; } = new List<string>();
+    public DateTime CreatedAt { get; set; }
+
+
+    public TravelLocation()
+    {
+        CreatedAt = DateTime.UtcNow;
+    }
 }
