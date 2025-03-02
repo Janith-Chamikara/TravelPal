@@ -188,6 +188,8 @@ namespace TravelPal.UI
             {
                 var collection = _mongoDbService.GetCollection<Preference>("preferences");
                 allPreferences = await collection.Find(_ => true).ToListAsync();
+
+                QuickSort_Alpha(allPreferences, 0, allPreferences.Count - 1);
                 UpdatePreferencesList(allPreferences);
             }
             catch (Exception ex)
@@ -195,6 +197,45 @@ namespace TravelPal.UI
                 MessageBox.Show($"Error loading preferences: {ex.Message}");
             }
         }
+
+        void QuickSort_Alpha(List<Preference> list, int low, int high)
+        {
+            if (low < high)
+            {
+                int pivot_index = Partition(list, low, high);
+
+                if (pivot_index - 1 > low)
+                    QuickSort_Alpha(list, low, pivot_index - 1);
+                if (pivot_index + 1 < high)
+                    QuickSort_Alpha(list, pivot_index + 1, high);
+            }
+        }
+
+        int Partition(List<Preference> list, int low, int high)
+        {
+            string pivot = list[high].Label ?? ""; // safe against null
+            int i = low - 1;
+
+            for (int j = low; j < high; j++)
+            {
+                if (string.Compare(list[j].Label ?? "", pivot) <= 0)
+                {
+                    i++;
+                    Swap(list, i, j);
+                }
+            }
+
+            Swap(list, i + 1, high);
+            return i + 1;
+        }
+
+        void Swap(List<Preference> list, int index1, int index2)
+        {
+            Preference temp = list[index1];
+            list[index1] = list[index2];
+            list[index2] = temp;
+        }
+
 
         private void UpdatePreferencesList(List<Preference> preferences)
         {
