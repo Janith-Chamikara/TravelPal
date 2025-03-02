@@ -40,14 +40,14 @@ namespace TravelPal.UI
                 Text = "Email",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 12),
-                Location = new Point(50, 50),
+                Location = new Point(50, 30),
                 AutoSize = true
             };
 
             // Full Name TextBox
             var emailTextBox = new TextBox()
             {
-                Location = new Point(50, 80),
+                Location = new Point(50, 60),
                 Width = 300,
                 Font = new Font("Arial", 10),
                 ForeColor = Color.Black,
@@ -60,14 +60,14 @@ namespace TravelPal.UI
                 Text = "Username",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 12),
-                Location = new Point(50, 120),
+                Location = new Point(50, 110),
                 AutoSize = true
             };
 
             // Username TextBox
             var usernameTextBox = new TextBox()
             {
-                Location = new Point(50, 150),
+                Location = new Point(50, 140),
                 Width = 300,
                 Font = new Font("Arial", 10),
                 ForeColor = Color.Black,
@@ -80,14 +80,14 @@ namespace TravelPal.UI
                 Text = "Password",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 12),
-                Location = new Point(50, 180),
+                Location = new Point(50, 190),
                 AutoSize = true
             };
 
             // Password TextBox
             var passwordTextBox = new TextBox()
             {
-                Location = new Point(50, 210),
+                Location = new Point(50, 220),
                 Width = 300,
                 Font = new Font("Arial", 10),
                 ForeColor = Color.Black,
@@ -99,7 +99,7 @@ namespace TravelPal.UI
             var signUpButton = new Button()
             {
                 Text = "Sign Up",
-                Location = new Point(50, 250),
+                Location = new Point(50, 270),
                 Width = 300,
                 Height = 40,
                 Font = new Font("Arial", 12, FontStyle.Bold),
@@ -117,7 +117,7 @@ namespace TravelPal.UI
                 Text = "Already have an account? Login here",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 10),
-                Location = new Point(50, 300),
+                Location = new Point(35, 320),
                 AutoSize = true
             };
             loginLink.LinkColor = Color.White;  // Set the color of the link text

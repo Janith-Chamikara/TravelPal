@@ -43,13 +43,13 @@ namespace TravelPal.UI
                 Text = "Username",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 12),
-                Location = new Point(50, 50),
+                Location = new Point(50, 30),
                 AutoSize = true
             };
 
             var usernameTextBox = new TextBox()
             {
-                Location = new Point(50, 80),
+                Location = new Point(50, 60),
                 Width = 300,
                 Font = new Font("Arial", 10),
                 ForeColor = Color.Black,
@@ -61,13 +61,13 @@ namespace TravelPal.UI
                 Text = "Password",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 12),
-                Location = new Point(50, 120),
+                Location = new Point(50, 110),
                 AutoSize = true
             };
 
             var passwordTextBox = new TextBox()
             {
-                Location = new Point(50, 150),
+                Location = new Point(50, 140),
                 Width = 300,
                 Font = new Font("Arial", 10),
                 ForeColor = Color.Black,
@@ -94,7 +94,7 @@ namespace TravelPal.UI
                 Text = "Don't have an account yet? Sign up here",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 10),
-                Location = new Point(50, 240),
+                Location = new Point(15, 240),
                 AutoSize = true
             };
             signUpLink.LinkColor = Color.White;
