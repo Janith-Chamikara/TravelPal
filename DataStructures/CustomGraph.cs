@@ -8,7 +8,7 @@ namespace TravelPal.DataStructures
 {
     public class CustomGraph
     {
-        private Dictionary<long, Node> nodes;
+        private Dictionary<long,Node> nodes;
         private const double MAX_SEARCH_RADIUS = 5.0;// 1 kilometer radius for nearest node search
 
         public CustomGraph()
@@ -39,7 +39,7 @@ namespace TravelPal.DataStructures
             {
                 double distance = DistanceCalculator.CalculateDistance(fromNode.Latitude, fromNode.Longitude, toNode.Latitude, toNode.Longitude);
                 fromNode.Neighbors[toNode] = distance;
-                toNode.Neighbors[fromNode] = distance; // Assuming undirected graph
+                toNode.Neighbors[fromNode] = distance; // undirected graph
             }
         }
 
@@ -82,7 +82,6 @@ namespace TravelPal.DataStructures
             double minDistance = double.MaxValue;
             Node tempNode = new Node(0, lat, lon);
 
-            // Only search nodes within reasonable distance
             var nearbyNodes = nodes.Values.Where(n =>
             {
                 double distance = DistanceCalculator.CalculateDistance(tempNode.Latitude,tempNode.Longitude, n.Latitude, n.Longitude);
@@ -101,7 +100,7 @@ namespace TravelPal.DataStructures
 
             if (nearest == null)
             {
-                // If no nodes found within MAX_SEARCH_RADIUS, try finding the closest node regardless of distance
+                
                 foreach (var node in nodes.Values)
                 {
                     double distance = DistanceCalculator.CalculateDistance(tempNode.Latitude, tempNode.Longitude, node.Latitude, node.Longitude);

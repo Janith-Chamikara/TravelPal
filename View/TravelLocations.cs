@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using MongoDB.Driver;
 using TravelPal.Algorithms;
@@ -112,7 +113,7 @@ namespace TravelPal.UI
 
             filterBox = new ComboBox
             {
-                Location = new Point(530, 8), 
+                Location = new Point(530, 8),
                 Width = 190,
                 Font = new Font("Segoe UI", 10),
                 DropDownStyle = ComboBoxStyle.DropDownList
@@ -283,20 +284,30 @@ namespace TravelPal.UI
             locationListView.Items.Clear();
             var locations = locationList.GetAllLocations();
 
+            Stopwatch stopwatch = new Stopwatch();
+            
+
             if (selectedValue == "Date & time")
             {
-                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                stopwatch.Start();
+                SortAlgorithms.MergeSort(locations,
                                         (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+                stopwatch.Stop();
             }
             else if (selectedValue == "Alphabetically")
             {
-                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                stopwatch.Start();
+                SortAlgorithms.MergeSort(locations,
                                         (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+                stopwatch.Stop();
             }
             else if (selectedValue == "Date & time (reverse)")
+
             {
-                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                stopwatch.Start();
+                SortAlgorithms.MergeSort(locations,
                                         (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+                stopwatch.Stop();
             }
 
 

@@ -4,6 +4,7 @@ using TravelPal.Models;
 using TravelPal.Services;
 using TravelPal.Sessions;
 using TravelPal.Algorithms;
+using System.Diagnostics;
 
 namespace TravelPal.UI
 {
@@ -245,14 +246,57 @@ namespace TravelPal.UI
             }
         }
 
+        //linear search
+        //comment
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
-            var filteredPreferences = string.IsNullOrWhiteSpace(searchText)
-                ? allPreferences
-                : allPreferences.Where(p => p.Label.ToLower().Contains(searchText)).ToList();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (NaiveStringSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+            stopwatch.Stop();
             UpdatePreferencesList(filteredPreferences);
         }
+
+        // Naive string search (O(n*m))
+        private bool NaiveStringSearch(string text, string pattern)
+        {
+            int textLength = text.Length;
+            int patternLength = pattern.Length;
+
+            for (int i = 0; i <= textLength - patternLength; i++)
+            {
+                int j;
+                for (j = 0; j < patternLength; j++)
+                {
+                    if (text[i + j] != pattern[j])
+                    {
+                        break;
+                    }
+                }
+                if (j == patternLength)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        //ens linear search
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
