@@ -4,6 +4,7 @@ using TravelPal.Models;
 using TravelPal.Services;
 using TravelPal.Sessions;
 using TravelPal.Algorithms;
+using System.Diagnostics;
 
 namespace TravelPal.UI
 {
@@ -190,8 +191,15 @@ namespace TravelPal.UI
                 var collection = _mongoDbService.GetCollection<Preference>("preferences");
                 allPreferences = await collection.Find(_ => true).ToListAsync();
 
+                //SortAlgorithms.BubbleSort(allPreferences,
+                //                  (p1, p2) => string.Compare(p1.Label ?? "", p2.Label ?? ""));
+
                 SortAlgorithms.QuickSort(allPreferences, 0, allPreferences.Count - 1,
                                         (p1, p2) => string.Compare(p1.Label ?? "", p2.Label ?? ""));
+
+                //SortAlgorithms.MergeSort(allPreferences,
+                //                (p1, p2) => string.Compare(p1.Label ?? "", p2.Label ?? ""));
+
                 UpdatePreferencesList(allPreferences);
             }
             catch (Exception ex)

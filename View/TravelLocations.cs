@@ -285,18 +285,36 @@ namespace TravelPal.UI
 
             if (selectedValue == "Date & time")
             {
+                //SortAlgorithms.BubbleSort(locations,
+                //                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+
                 SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
                                         (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+
+                //SortAlgorithms.MergeSort(locations,
+                //                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
             }
             else if (selectedValue == "Alphabetically")
             {
+                //SortAlgorithms.BubbleSort(locations,
+                //                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+
                 SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
                                         (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+
+                //SortAlgorithms.MergeSort(locations,
+                //                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
             }
             else if (selectedValue == "Date & time (reverse)")
             {
+                //SortAlgorithms.BubbleSort(locations,
+                //                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+
                 SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
                                         (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+
+                //SortAlgorithms.MergeSort(locations,
+                //                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
             }
 
 
