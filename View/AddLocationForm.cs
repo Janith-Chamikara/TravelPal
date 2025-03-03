@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using System.Diagnostics;
 using System.Text.Json;
 using TravelPal.Models;
 using TravelPal.Services;
@@ -205,10 +206,14 @@ namespace TravelPal.UI
             foreach (var pref in preferences)
             {
                 preferencesListBox.Items.Add(pref.Label);
-                preferenceIdMap[pref.Label] = pref.Id; // Store the mapping
+                preferenceIdMap[pref.Label] = pref.Id; // Store the mapping between label and Id
             }
+
             preferencesListBox.EndUpdate();
         }
+
+
+
 
         private async void CheckLocationButton_Click(object sender, EventArgs e)
         {
@@ -239,15 +244,84 @@ namespace TravelPal.UI
                 MessageBox.Show($"Error checking location: {ex.Message}");
             }
         }
+        /*
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
 
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (preference.Label.ToLower().Contains(searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+
+            UpdatePreferencesList(filteredPreferences);
+        }*/
+
+
+
+        //linear search
+        //comment
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
-            var filteredPreferences = string.IsNullOrWhiteSpace(searchText)
-                ? allPreferences
-                : allPreferences.Where(p => p.Label.ToLower().Contains(searchText)).ToList();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (NaiveStringSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+            stopwatch.Stop();
             UpdatePreferencesList(filteredPreferences);
         }
+
+        // Naive string search (O(n*m))
+        private bool NaiveStringSearch(string text, string pattern)
+        {
+            int textLength = text.Length;
+            int patternLength = pattern.Length;
+
+            for (int i = 0; i <= textLength - patternLength; i++)
+            {
+                int j;
+                for (j = 0; j < patternLength; j++)
+                {
+                    if (text[i + j] != pattern[j])
+                    {
+                        break;
+                    }
+                }
+                if (j == patternLength)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+//ens linear search
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
