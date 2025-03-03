@@ -1,4 +1,4 @@
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using System.Diagnostics;
 using System.Text.Json;
 using TravelPal.Models;
@@ -323,96 +323,147 @@ namespace TravelPal.UI
 
         //ens linear search
         */
+        /*
+                //start kmp algorithm
 
-        //start kmp algorithm
+                private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+                {
+                    var searchText = searchPreferencesBox.Text.ToLower();
+                    List<Preference> filteredPreferences = new List<Preference>();
+                    Stopwatch stopwatch = new Stopwatch();  
+                    stopwatch.Start();
+                    if (string.IsNullOrWhiteSpace(searchText))
+                    {
+                        filteredPreferences = allPreferences;
+                    }
+                    else
+                    {
+                        foreach (var preference in allPreferences)
+                        {
+                            if (KMP_Search(preference.Label.ToLower(), searchText))
+                            {
+                                filteredPreferences.Add(preference);
+                            }
+                        }
+                    }
+                    stopwatch.Stop();   
+                    UpdatePreferencesList(filteredPreferences);
+                }
 
+                // KMP algorithm (O(n + m))
+                private bool KMP_Search(string text, string pattern)
+                {
+                    int[] lps = ComputeLPSArray(pattern);
+                    int i = 0, j = 0;
+
+                    while (i < text.Length)
+                    {
+                        if (pattern[j] == text[i])
+                        {
+                            i++; j++;
+                        }
+                        if (j == pattern.Length)
+                        {
+                            return true;
+                        }
+                        else if (i < text.Length && pattern[j] != text[i])
+                        {
+                            if (j != 0)
+                            {
+                                j = lps[j - 1];
+                            }
+                            else
+                            {
+                                i++;
+                            }
+                        }
+                    }
+                    return false;
+                }
+
+                // Compute the longest prefix suffix (LPS) array
+                private int[] ComputeLPSArray(string pattern)
+                {
+                    int[] lps = new int[pattern.Length];
+                    int length = 0;
+                    int i = 1;
+
+                    while (i < pattern.Length)
+                    {
+                        if (pattern[i] == pattern[length])
+                        {
+                            length++;
+                            lps[i] = length;
+                            i++;
+                        }
+                        else
+                        {
+                            if (length != 0)
+                            {
+                                length = lps[length - 1];
+                            }
+                            else
+                            {
+                                lps[i] = 0;
+                                i++;
+                            }
+                        }
+                    }
+                    return lps;
+                }
+
+        //End KMP algorithm
+        */
+
+        //start jump search
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
             List<Preference> filteredPreferences = new List<Preference>();
-            Stopwatch stopwatch = new Stopwatch();  
-            stopwatch.Start();
+
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 filteredPreferences = allPreferences;
             }
             else
             {
-                foreach (var preference in allPreferences)
+                // Assuming allPreferences is sorted alphabetically by Label
+                int index = JumpSearch(allPreferences, searchText);
+                if (index >= 0)
                 {
-                    if (KMP_Search(preference.Label.ToLower(), searchText))
-                    {
-                        filteredPreferences.Add(preference);
-                    }
+                    filteredPreferences.Add(allPreferences[index]);
                 }
             }
-            stopwatch.Stop();   
+
             UpdatePreferencesList(filteredPreferences);
         }
 
-        // KMP algorithm (O(n + m))
-        private bool KMP_Search(string text, string pattern)
+        // Jump Search (O(√n))
+        private int JumpSearch(List<Preference> preferences, string searchText)
         {
-            int[] lps = ComputeLPSArray(pattern);
-            int i = 0, j = 0;
 
-            while (i < text.Length)
+
+            int n = preferences.Count;
+            int step = (int)Math.Sqrt(n);
+            int prev = 0;
+
+            while (preferences[Math.Min(step, n) - 1].Label.ToLower().CompareTo(searchText) < 0)
             {
-                if (pattern[j] == text[i])
+                prev = step;
+                step += (int)Math.Sqrt(n);
+                if (prev >= n) return -1;
+            }
+
+            for (int i = prev; i < Math.Min(step, n); i++)
+            {
+                if (preferences[i].Label.ToLower().Contains(searchText))
                 {
-                    i++; j++;
-                }
-                if (j == pattern.Length)
-                {
-                    return true;
-                }
-                else if (i < text.Length && pattern[j] != text[i])
-                {
-                    if (j != 0)
-                    {
-                        j = lps[j - 1];
-                    }
-                    else
-                    {
-                        i++;
-                    }
+                    return i; // Found
                 }
             }
-            return false;
+            return -1;  // Not found
         }
-
-        // Compute the longest prefix suffix (LPS) array
-        private int[] ComputeLPSArray(string pattern)
-        {
-            int[] lps = new int[pattern.Length];
-            int length = 0;
-            int i = 1;
-
-            while (i < pattern.Length)
-            {
-                if (pattern[i] == pattern[length])
-                {
-                    length++;
-                    lps[i] = length;
-                    i++;
-                }
-                else
-                {
-                    if (length != 0)
-                    {
-                        length = lps[length - 1];
-                    }
-                    else
-                    {
-                        lps[i] = 0;
-                        i++;
-                    }
-                }
-            }
-            return lps;
-        }
-
-//End KMP algorithm
+//end jump search
         private async void AddButton_Click(object sender, EventArgs e)
         {
             if (!latitude.HasValue || !longitude.HasValue)
