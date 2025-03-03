@@ -270,14 +270,67 @@ namespace TravelPal.UI
         }*/
 
 
+        /*
+                //linear search
+                //comment
+                private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+                {
+                    var searchText = searchPreferencesBox.Text.ToLower();
+                    List<Preference> filteredPreferences = new List<Preference>();
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    if (string.IsNullOrWhiteSpace(searchText))
+                    {
+                        filteredPreferences = allPreferences;
+                    }
+                    else
+                    {
+                        foreach (var preference in allPreferences)
+                        {
+                            if (NaiveStringSearch(preference.Label.ToLower(), searchText))
+                            {
+                                filteredPreferences.Add(preference);
+                            }
+                        }
+                    }
+                    stopwatch.Stop();
+                    UpdatePreferencesList(filteredPreferences);
+                }
 
-        //linear search
-        //comment
+                // Naive string search (O(n*m))
+                private bool NaiveStringSearch(string text, string pattern)
+                {
+                    int textLength = text.Length;
+                    int patternLength = pattern.Length;
+
+                    for (int i = 0; i <= textLength - patternLength; i++)
+                    {
+                        int j;
+                        for (j = 0; j < patternLength; j++)
+                        {
+                            if (text[i + j] != pattern[j])
+                            {
+                                break;
+                            }
+                        }
+                        if (j == patternLength)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+        //ens linear search
+        */
+
+        //start kmp algorithm
+
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
             List<Preference> filteredPreferences = new List<Preference>();
-            Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new Stopwatch();  
             stopwatch.Start();
             if (string.IsNullOrWhiteSpace(searchText))
             {
@@ -287,42 +340,79 @@ namespace TravelPal.UI
             {
                 foreach (var preference in allPreferences)
                 {
-                    if (NaiveStringSearch(preference.Label.ToLower(), searchText))
+                    if (KMP_Search(preference.Label.ToLower(), searchText))
                     {
                         filteredPreferences.Add(preference);
                     }
                 }
             }
-            stopwatch.Stop();
+            stopwatch.Stop();   
             UpdatePreferencesList(filteredPreferences);
         }
 
-        // Naive string search (O(n*m))
-        private bool NaiveStringSearch(string text, string pattern)
+        // KMP algorithm (O(n + m))
+        private bool KMP_Search(string text, string pattern)
         {
-            int textLength = text.Length;
-            int patternLength = pattern.Length;
+            int[] lps = ComputeLPSArray(pattern);
+            int i = 0, j = 0;
 
-            for (int i = 0; i <= textLength - patternLength; i++)
+            while (i < text.Length)
             {
-                int j;
-                for (j = 0; j < patternLength; j++)
+                if (pattern[j] == text[i])
                 {
-                    if (text[i + j] != pattern[j])
-                    {
-                        break;
-                    }
+                    i++; j++;
                 }
-                if (j == patternLength)
+                if (j == pattern.Length)
                 {
                     return true;
+                }
+                else if (i < text.Length && pattern[j] != text[i])
+                {
+                    if (j != 0)
+                    {
+                        j = lps[j - 1];
+                    }
+                    else
+                    {
+                        i++;
+                    }
                 }
             }
             return false;
         }
-        
-//ens linear search
 
+        // Compute the longest prefix suffix (LPS) array
+        private int[] ComputeLPSArray(string pattern)
+        {
+            int[] lps = new int[pattern.Length];
+            int length = 0;
+            int i = 1;
+
+            while (i < pattern.Length)
+            {
+                if (pattern[i] == pattern[length])
+                {
+                    length++;
+                    lps[i] = length;
+                    i++;
+                }
+                else
+                {
+                    if (length != 0)
+                    {
+                        length = lps[length - 1];
+                    }
+                    else
+                    {
+                        lps[i] = 0;
+                        i++;
+                    }
+                }
+            }
+            return lps;
+        }
+
+//End KMP algorithm
         private async void AddButton_Click(object sender, EventArgs e)
         {
             if (!latitude.HasValue || !longitude.HasValue)
