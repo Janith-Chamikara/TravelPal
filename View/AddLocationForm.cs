@@ -323,7 +323,7 @@ namespace TravelPal.UI
 
         //ens linear search
         */
-        /*
+        
                 //start kmp algorithm
 
                 private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
@@ -413,14 +413,16 @@ namespace TravelPal.UI
                 }
 
         //End KMP algorithm
-        */
+        
 
+        /*
         //start jump search
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
             List<Preference> filteredPreferences = new List<Preference>();
-
+            Stopwatch stopwatch = new Stopwatch();  
+            stopwatch.Start();
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 filteredPreferences = allPreferences;
@@ -434,7 +436,7 @@ namespace TravelPal.UI
                     filteredPreferences.Add(allPreferences[index]);
                 }
             }
-
+            stopwatch.Stop();
             UpdatePreferencesList(filteredPreferences);
         }
 
@@ -463,6 +465,7 @@ namespace TravelPal.UI
             }
             return -1;  // Not found
         }
+        */
 //end jump search
         private async void AddButton_Click(object sender, EventArgs e)
         {
