@@ -269,7 +269,7 @@ namespace TravelPal.UI
             UpdatePreferencesList(filteredPreferences);
         }*/
 
-        /*
+        
         
                 //linear search
                 //comment
@@ -320,8 +320,8 @@ namespace TravelPal.UI
                     }
                     return false;
                 }
-        */
-        //ens linear search
+        
+        //end linear search
 
         /*
                 //start kmp algorithm
@@ -535,7 +535,7 @@ namespace TravelPal.UI
 //end rabin karp search
         */
 
-
+        /*
         //Boyer Moore Algorithm
 
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
@@ -597,7 +597,7 @@ namespace TravelPal.UI
                 table[pattern[i]] = i;
             return table;
         }
-
+        */
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
