@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MongoDB.Driver;
+using TravelPal.Algorithms;
 using TravelPal.DataStructures;
 using TravelPal.Services;
 using TravelPal.Sessions;
@@ -29,6 +30,7 @@ namespace TravelPal.UI
             LoadUserLocations();
         }
 
+        private ComboBox filterBox;
         private void InitializeComponents()
         {
             this.Text = "My Travel Locations";
@@ -99,6 +101,34 @@ namespace TravelPal.UI
 
             addPanel.Controls.AddRange(new Control[] { locationNameBox, addButton, removeButton });
 
+            Label filterLabel = new Label
+            {
+                Text = "Filter by:",
+                Location = new Point(440, 10),
+                Font = new Font("Segoe UI", 10),
+                AutoSize = true
+            };
+            addPanel.Controls.Add(filterLabel);
+
+            filterBox = new ComboBox
+            {
+                Location = new Point(530, 8), 
+                Width = 190,
+                Font = new Font("Segoe UI", 10),
+                DropDownStyle = ComboBoxStyle.DropDownList
+            };
+
+            filterBox.Items.Add("Date & time");
+            filterBox.Items.Add("Alphabetically");
+            filterBox.Items.Add("Date & time (reverse)");
+
+            filterBox.SelectedIndex = 0;
+
+            filterBox.SelectedIndexChanged += FilterBox_SelectedIndexChanged;
+
+            addPanel.Controls.Add(filterBox);
+
+
             // Locations ListView
             locationListView = new ListView
             {
@@ -111,8 +141,9 @@ namespace TravelPal.UI
             locationListView.Columns.AddRange(new ColumnHeader[]
             {
             new ColumnHeader { Text = "Location Name", Width = 200 },
-            new ColumnHeader { Text = "Latitude", Width = 100 },
-            new ColumnHeader { Text = "Longitude", Width = 100 },
+            new ColumnHeader { Text = "Latitude", Width = 120 },
+            new ColumnHeader { Text = "Longitude", Width = 120 },
+            new ColumnHeader { Text = "Created at", Width = 200 },
             new ColumnHeader { Text = "View more",Width = 1}
             });
 
@@ -134,7 +165,7 @@ namespace TravelPal.UI
 
                 foreach (var location in locations)
                 {
-                    locationList.AddLocation(location.LocationName, location.Latitude, location.Longitude);
+                    locationList.AddLocation(location.LocationName, location.Latitude, location.Longitude, location.CreatedAt);
                 }
 
                 RefreshLocationsList();
@@ -155,7 +186,8 @@ namespace TravelPal.UI
                 {
                 location.LocationName,
                 location.Latitude.ToString("F6"),
-                location.Longitude.ToString("F6")
+                location.Longitude.ToString("F6"),
+                location.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
             });
                 locationListView.Items.Add(item);
             }
@@ -234,7 +266,8 @@ namespace TravelPal.UI
                 {
                 location.LocationName,
                 location.Latitude.ToString("F6"),
-                location.Longitude.ToString("F6")
+                location.Longitude.ToString("F6"),
+                location.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
             }));
             }
             else
@@ -242,6 +275,45 @@ namespace TravelPal.UI
                 MessageBox.Show("Location not found");
             }
         }
+
+        private void FilterBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedValue = filterBox.SelectedItem.ToString();
+            string message = "";
+            locationListView.Items.Clear();
+            var locations = locationList.GetAllLocations();
+
+            if (selectedValue == "Date & time")
+            {
+                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+            }
+            else if (selectedValue == "Alphabetically")
+            {
+                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+            }
+            else if (selectedValue == "Date & time (reverse)")
+            {
+                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+            }
+
+
+            foreach (var location in locations)
+            {
+                var item = new ListViewItem(new[]
+                {
+                    location.LocationName,
+                    location.Latitude.ToString("F6"),
+                    location.Longitude.ToString("F6"),
+                    location.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")
+                });
+                locationListView.Items.Add(item);
+            }
+        }
+
+
 
         private async Task<(double lat, double lon)?> GetCoordinatesFromName(string locationName)
         {

@@ -3,6 +3,7 @@ using System.Text.Json;
 using TravelPal.Models;
 using TravelPal.Services;
 using TravelPal.Sessions;
+using TravelPal.Algorithms;
 
 namespace TravelPal.UI
 {
@@ -188,6 +189,9 @@ namespace TravelPal.UI
             {
                 var collection = _mongoDbService.GetCollection<Preference>("preferences");
                 allPreferences = await collection.Find(_ => true).ToListAsync();
+
+                SortAlgorithms.QuickSort(allPreferences, 0, allPreferences.Count - 1,
+                                        (p1, p2) => string.Compare(p1.Label ?? "", p2.Label ?? ""));
                 UpdatePreferencesList(allPreferences);
             }
             catch (Exception ex)
@@ -195,6 +199,7 @@ namespace TravelPal.UI
                 MessageBox.Show($"Error loading preferences: {ex.Message}");
             }
         }
+
 
         private void UpdatePreferencesList(List<Preference> preferences)
         {
