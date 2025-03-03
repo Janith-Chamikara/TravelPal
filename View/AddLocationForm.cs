@@ -270,7 +270,7 @@ namespace TravelPal.UI
         }*/
 
 
-        /*
+        
                 //linear search
                 //comment
                 private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
@@ -322,8 +322,8 @@ namespace TravelPal.UI
                 }
 
         //ens linear search
-        */
         
+        /*
                 //start kmp algorithm
 
                 private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
@@ -413,7 +413,7 @@ namespace TravelPal.UI
                 }
 
         //End KMP algorithm
-        
+        */
 
         /*
         //start jump search
