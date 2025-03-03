@@ -269,7 +269,7 @@ namespace TravelPal.UI
             UpdatePreferencesList(filteredPreferences);
         }*/
 
-
+        /*
         
                 //linear search
                 //comment
@@ -320,9 +320,9 @@ namespace TravelPal.UI
                     }
                     return false;
                 }
-
+        */
         //ens linear search
-        
+
         /*
                 //start kmp algorithm
 
@@ -466,7 +466,75 @@ namespace TravelPal.UI
             return -1;  // Not found
         }
         */
-//end jump search
+        //end jump search
+        /*
+        //rabin karp search
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (RabinKarpSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+            stopwatch.Stop();
+            UpdatePreferencesList(filteredPreferences);
+        }
+
+        // Rabin-Karp string search
+        private bool RabinKarpSearch(string text, string pattern)
+        {
+            int prime = 101; // A prime number for hashing
+            int m = pattern.Length;
+            int n = text.Length;
+            int patternHash = 0, textHash = 0, h = 1;
+
+            for (int i = 0; i < m - 1; i++)
+                h = (h * 256) % prime;
+
+            for (int i = 0; i < m; i++)
+            {
+                patternHash = (256 * patternHash + pattern[i]) % prime;
+                textHash = (256 * textHash + text[i]) % prime;
+            }
+
+            for (int i = 0; i <= n - m; i++)
+            {
+                if (patternHash == textHash)
+                {
+                    int j;
+                    for (j = 0; j < m; j++)
+                        if (text[i + j] != pattern[j])
+                            break;
+
+                    if (j == m)
+                        return true;
+                }
+
+                if (i < n - m)
+                {
+                    textHash = (256 * (textHash - text[i] * h) + text[i + m]) % prime;
+                    if (textHash < 0)
+                        textHash += prime;
+                }
+            }
+            return false;
+        }
+//end rabin karp search
+        */
+
         private async void AddButton_Click(object sender, EventArgs e)
         {
             if (!latitude.HasValue || !longitude.HasValue)
