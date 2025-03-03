@@ -535,6 +535,70 @@ namespace TravelPal.UI
 //end rabin karp search
         */
 
+
+        //Boyer Moore Algorithm
+
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (BoyerMooreSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+            stopwatch.Stop();
+            UpdatePreferencesList(filteredPreferences);
+        }
+
+        // Boyer-Moore algorithm
+        private bool BoyerMooreSearch(string text, string pattern)
+        {
+            int[] badCharTable = BuildBadCharTable(pattern);
+            int m = pattern.Length;
+            int n = text.Length;
+            int shift = 0;
+
+            while (shift <= (n - m))
+            {
+                int j = m - 1;
+                while (j >= 0 && pattern[j] == text[shift + j])
+                    j--;
+
+                if (j < 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    shift += Math.Max(1, j - badCharTable[text[shift + j]]);
+                }
+            }
+            return false;
+        }
+
+        private int[] BuildBadCharTable(string pattern)
+        {
+            int[] table = new int[256];
+            for (int i = 0; i < 256; i++)
+                table[i] = -1;
+            for (int i = 0; i < pattern.Length; i++)
+                table[pattern[i]] = i;
+            return table;
+        }
+
+
         private async void AddButton_Click(object sender, EventArgs e)
         {
             if (!latitude.HasValue || !longitude.HasValue)
