@@ -1,4 +1,5 @@
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using System.Diagnostics;
 using System.Text.Json;
 using TravelPal.Models;
 using TravelPal.Services;
@@ -218,10 +219,14 @@ namespace TravelPal.UI
             foreach (var pref in preferences)
             {
                 preferencesListBox.Items.Add(pref.Label);
-                preferenceIdMap[pref.Label] = pref.Id; // Store the mapping
+                preferenceIdMap[pref.Label] = pref.Id; // Store the mapping between label and Id
             }
+
             preferencesListBox.EndUpdate();
         }
+
+
+
 
         private async void CheckLocationButton_Click(object sender, EventArgs e)
         {
@@ -252,15 +257,371 @@ namespace TravelPal.UI
                 MessageBox.Show($"Error checking location: {ex.Message}");
             }
         }
+        /*
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (preference.Label.ToLower().Contains(searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+
+            UpdatePreferencesList(filteredPreferences);
+        }*/
+
+        /*
+
+        //linear search
+        //comment
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                // Perform a linear search over all preferences
+                foreach (var preference in allPreferences)
+                {
+                    // Check if the label matches the search text manually (without inbuilt methods)
+                    if (LinearSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+
+            stopwatch.Stop();
+            UpdatePreferencesList(filteredPreferences);
+        }
+
+        // Custom linear search (no inbuilt methods)
+        private bool LinearSearch(string text, string pattern)
+        {
+            int textLength = text.Length;
+            int patternLength = pattern.Length;
+
+            // Loop through the text
+            for (int i = 0; i <= textLength - patternLength; i++)
+            {
+                bool match = true;
+
+                // Compare each character of the pattern with the corresponding character in the text
+                for (int j = 0; j < patternLength; j++)
+                {
+                    if (text[i + j] != pattern[j])
+                    {
+                        match = false;
+                        break; // No match, exit the inner loop
+                    }
+                }
+
+                if (match)
+                {
+                    return true; // Pattern found
+                }
+            }
+
+            return false; // Pattern not found
+        }
+
+        */
+        //end linear search
+
+        /*
+                //start kmp algorithm
+
+                private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+                {
+                    var searchText = searchPreferencesBox.Text.ToLower();
+                    List<Preference> filteredPreferences = new List<Preference>();
+                    Stopwatch stopwatch = new Stopwatch();  
+                    stopwatch.Start();
+                    if (string.IsNullOrWhiteSpace(searchText))
+                    {
+                        filteredPreferences = allPreferences;
+                    }
+                    else
+                    {
+                        foreach (var preference in allPreferences)
+                        {
+                            if (KMP_Search(preference.Label.ToLower(), searchText))
+                            {
+                                filteredPreferences.Add(preference);
+                            }
+                        }
+                    }
+                    stopwatch.Stop();   
+                    UpdatePreferencesList(filteredPreferences);
+                }
+
+                // KMP algorithm (O(n + m))
+                private bool KMP_Search(string text, string pattern)
+                {
+                    int[] lps = ComputeLPSArray(pattern);
+                    int i = 0, j = 0;
+
+                    while (i < text.Length)
+                    {
+                        if (pattern[j] == text[i])
+                        {
+                            i++; j++;
+                        }
+                        if (j == pattern.Length)
+                        {
+                            return true;
+                        }
+                        else if (i < text.Length && pattern[j] != text[i])
+                        {
+                            if (j != 0)
+                            {
+                                j = lps[j - 1];
+                            }
+                            else
+                            {
+                                i++;
+                            }
+                        }
+                    }
+                    return false;
+                }
+
+                // Compute the longest prefix suffix (LPS) array
+                private int[] ComputeLPSArray(string pattern)
+                {
+                    int[] lps = new int[pattern.Length];
+                    int length = 0;
+                    int i = 1;
+
+                    while (i < pattern.Length)
+                    {
+                        if (pattern[i] == pattern[length])
+                        {
+                            length++;
+                            lps[i] = length;
+                            i++;
+                        }
+                        else
+                        {
+                            if (length != 0)
+                            {
+                                length = lps[length - 1];
+                            }
+                            else
+                            {
+                                lps[i] = 0;
+                                i++;
+                            }
+                        }
+                    }
+                    return lps;
+                }
+
+        //End KMP algorithm
+        */
+
+        /*
+        //start jump search
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();  
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                // Assuming allPreferences is sorted alphabetically by Label
+                int index = JumpSearch(allPreferences, searchText);
+                if (index >= 0)
+                {
+                    filteredPreferences.Add(allPreferences[index]);
+                }
+            }
+            stopwatch.Stop();
+            UpdatePreferencesList(filteredPreferences);
+        }
+
+        // Jump Search (O(√n))
+        private int JumpSearch(List<Preference> preferences, string searchText)
+        {
+
+
+            int n = preferences.Count;
+            int step = (int)Math.Sqrt(n);
+            int prev = 0;
+
+            while (preferences[Math.Min(step, n) - 1].Label.ToLower().CompareTo(searchText) < 0)
+            {
+                prev = step;
+                step += (int)Math.Sqrt(n);
+                if (prev >= n) return -1;
+            }
+
+            for (int i = prev; i < Math.Min(step, n); i++)
+            {
+                if (preferences[i].Label.ToLower().Contains(searchText))
+                {
+                    return i; // Found
+                }
+            }
+            return -1;  // Not found
+        }
+        */
+        //end jump search
+        /*
+        //rabin karp search
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (RabinKarpSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+            stopwatch.Stop();
+            UpdatePreferencesList(filteredPreferences);
+        }
+        
+        // Rabin-Karp string search
+        private bool RabinKarpSearch(string text, string pattern)
+        {
+            int prime = 101; // A prime number for hashing
+            int m = pattern.Length;
+            int n = text.Length;
+            int patternHash = 0, textHash = 0, h = 1;
+
+            for (int i = 0; i < m - 1; i++)
+                h = (h * 256) % prime;
+
+            for (int i = 0; i < m; i++)
+            {
+                patternHash = (256 * patternHash + pattern[i]) % prime;
+                textHash = (256 * textHash + text[i]) % prime;
+            }
+
+            for (int i = 0; i <= n - m; i++)
+            {
+                if (patternHash == textHash)
+                {
+                    int j;
+                    for (j = 0; j < m; j++)
+                        if (text[i + j] != pattern[j])
+                            break;
+
+                    if (j == m)
+                        return true;
+                }
+
+                if (i < n - m)
+                {
+                    textHash = (256 * (textHash - text[i] * h) + text[i + m]) % prime;
+                    if (textHash < 0)
+                        textHash += prime;
+                }
+            }
+            return false;
+        }
+//end rabin karp search
+        */
+
+        
+        //Boyer Moore Algorithm
 
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
-            var filteredPreferences = string.IsNullOrWhiteSpace(searchText)
-                ? allPreferences
-                : allPreferences.Where(p => p.Label.ToLower().Contains(searchText)).ToList();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                foreach (var preference in allPreferences)
+                {
+                    if (BoyerMooreSearch(preference.Label.ToLower(), searchText))
+                    {
+                        filteredPreferences.Add(preference);
+                    }
+                }
+            }
+            stopwatch.Stop();
             UpdatePreferencesList(filteredPreferences);
         }
+
+        // Boyer-Moore algorithm
+        private bool BoyerMooreSearch(string text, string pattern)
+        {
+            int[] badCharTable = BuildBadCharTable(pattern);
+            int m = pattern.Length;
+            int n = text.Length;
+            int shift = 0;
+
+            while (shift <= (n - m))
+            {
+                int j = m - 1;
+                while (j >= 0 && pattern[j] == text[shift + j])
+                    j--;
+
+                if (j < 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    shift += Math.Max(1, j - badCharTable[text[shift + j]]);
+                }
+            }
+            return false;
+        }
+
+        private int[] BuildBadCharTable(string pattern)
+        {
+            int[] table = new int[256];
+            for (int i = 0; i < 256; i++)
+                table[i] = -1;
+            for (int i = 0; i < pattern.Length; i++)
+                table[pattern[i]] = i;
+            return table;
+        }
+        
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
