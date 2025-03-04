@@ -6,7 +6,7 @@ using TravelPal.DataStructures;
 using TravelPal.Sessions;
 public class RecommendedLocationsForm : Form
 {
-    private readonly string FOURSQUARE_API_KEY = "fsq3y/D896CyiVoi0G3szivnvS7i5tgDyY72QFDBdK1Uy9M=";
+    private readonly string FOURSQUARE_API_KEY = "fsq36mu6JJsyTsqDUeteJj+1MvMfOdsn2B94foDyEXd/C/Y=";
     private ListView recommendedListView;
     private Label titleLabel;
     private TravelLocation selectedLocation;
@@ -102,7 +102,7 @@ public class RecommendedLocationsForm : Form
             }
 
             var response = await client.ExecuteAsync(request);
-            MessageBox.Show($"Response Content: {response.Content}");
+            //MessageBox.Show($"Response Content: {response.Content}");
             Debug.WriteLine($"Response Content: {request}");
             Debug.WriteLine($"Response Status: {response.StatusCode}");
             Debug.WriteLine($"Response Content: {response.Content}");

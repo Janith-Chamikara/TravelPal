@@ -9,7 +9,7 @@ namespace TravelPal.DataStructures
     public class CustomGraph
     {
         private Dictionary<long,Node> nodes;
-        private const double MAX_SEARCH_RADIUS = 5.0;// 1 kilometer radius for nearest node search
+        private const double MAX_SEARCH_RADIUS = 5.0;
 
         public CustomGraph()
         {

@@ -258,8 +258,11 @@ namespace TravelPal.UI
                 RefreshLocationsList();
                 return;
             }
-
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            //BoyerMoore search
             var location = locationList.SearchLocation(searchBox.Text);
+            stopwatch.Stop();
             if (location != null)
             {
                 locationListView.Items.Clear();
@@ -285,11 +288,17 @@ namespace TravelPal.UI
             var locations = locationList.GetAllLocations();
 
             Stopwatch stopwatch = new Stopwatch();
-            
+
 
             if (selectedValue == "Date & time")
             {
                 stopwatch.Start();
+                //SortAlgorithms.BubbleSort(locations,
+                //                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+
+                //SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                //                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+
                 SortAlgorithms.MergeSort(locations,
                                         (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
                 stopwatch.Stop();
@@ -297,6 +306,12 @@ namespace TravelPal.UI
             else if (selectedValue == "Alphabetically")
             {
                 stopwatch.Start();
+                //SortAlgorithms.BubbleSort(locations,
+                //                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+
+                //SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                //                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+
                 SortAlgorithms.MergeSort(locations,
                                         (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
                 stopwatch.Stop();
@@ -305,6 +320,12 @@ namespace TravelPal.UI
 
             {
                 stopwatch.Start();
+                //SortAlgorithms.BubbleSort(locations,
+                //                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+
+                //SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
+                //                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+
                 SortAlgorithms.MergeSort(locations,
                                         (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
                 stopwatch.Stop();
