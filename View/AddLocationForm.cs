@@ -269,58 +269,69 @@ namespace TravelPal.UI
             UpdatePreferencesList(filteredPreferences);
         }*/
 
-        
-        
-                //linear search
-                //comment
-                private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        /*
+
+        //linear search
+        //comment
+        private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
+        {
+            var searchText = searchPreferencesBox.Text.ToLower();
+            List<Preference> filteredPreferences = new List<Preference>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                filteredPreferences = allPreferences;
+            }
+            else
+            {
+                // Perform a linear search over all preferences
+                foreach (var preference in allPreferences)
                 {
-                    var searchText = searchPreferencesBox.Text.ToLower();
-                    List<Preference> filteredPreferences = new List<Preference>();
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-                    if (string.IsNullOrWhiteSpace(searchText))
+                    // Check if the label matches the search text manually (without inbuilt methods)
+                    if (LinearSearch(preference.Label.ToLower(), searchText))
                     {
-                        filteredPreferences = allPreferences;
+                        filteredPreferences.Add(preference);
                     }
-                    else
+                }
+            }
+
+            stopwatch.Stop();
+            UpdatePreferencesList(filteredPreferences);
+        }
+
+        // Custom linear search (no inbuilt methods)
+        private bool LinearSearch(string text, string pattern)
+        {
+            int textLength = text.Length;
+            int patternLength = pattern.Length;
+
+            // Loop through the text
+            for (int i = 0; i <= textLength - patternLength; i++)
+            {
+                bool match = true;
+
+                // Compare each character of the pattern with the corresponding character in the text
+                for (int j = 0; j < patternLength; j++)
+                {
+                    if (text[i + j] != pattern[j])
                     {
-                        foreach (var preference in allPreferences)
-                        {
-                            if (NaiveStringSearch(preference.Label.ToLower(), searchText))
-                            {
-                                filteredPreferences.Add(preference);
-                            }
-                        }
+                        match = false;
+                        break; // No match, exit the inner loop
                     }
-                    stopwatch.Stop();
-                    UpdatePreferencesList(filteredPreferences);
                 }
 
-                // Naive string search (O(n*m))
-                private bool NaiveStringSearch(string text, string pattern)
+                if (match)
                 {
-                    int textLength = text.Length;
-                    int patternLength = pattern.Length;
-
-                    for (int i = 0; i <= textLength - patternLength; i++)
-                    {
-                        int j;
-                        for (j = 0; j < patternLength; j++)
-                        {
-                            if (text[i + j] != pattern[j])
-                            {
-                                break;
-                            }
-                        }
-                        if (j == patternLength)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
+                    return true; // Pattern found
                 }
-        
+            }
+
+            return false; // Pattern not found
+        }
+
+        */
         //end linear search
 
         /*
@@ -492,7 +503,7 @@ namespace TravelPal.UI
             stopwatch.Stop();
             UpdatePreferencesList(filteredPreferences);
         }
-
+        
         // Rabin-Karp string search
         private bool RabinKarpSearch(string text, string pattern)
         {
@@ -535,7 +546,7 @@ namespace TravelPal.UI
 //end rabin karp search
         */
 
-        /*
+        
         //Boyer Moore Algorithm
 
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
@@ -597,7 +608,7 @@ namespace TravelPal.UI
                 table[pattern[i]] = i;
             return table;
         }
-        */
+        
 
         private async void AddButton_Click(object sender, EventArgs e)
         {
