@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using MongoDB.Driver;
 using TravelPal.Algorithms;
@@ -112,7 +113,7 @@ namespace TravelPal.UI
 
             filterBox = new ComboBox
             {
-                Location = new Point(530, 8), 
+                Location = new Point(530, 8),
                 Width = 190,
                 Font = new Font("Segoe UI", 10),
                 DropDownStyle = ComboBoxStyle.DropDownList
@@ -257,8 +258,11 @@ namespace TravelPal.UI
                 RefreshLocationsList();
                 return;
             }
-
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            //BoyerMoore search
             var location = locationList.SearchLocation(searchBox.Text);
+            stopwatch.Stop();
             if (location != null)
             {
                 locationListView.Items.Clear();
@@ -283,38 +287,48 @@ namespace TravelPal.UI
             locationListView.Items.Clear();
             var locations = locationList.GetAllLocations();
 
+            Stopwatch stopwatch = new Stopwatch();
+
+
             if (selectedValue == "Date & time")
             {
+                stopwatch.Start();
                 //SortAlgorithms.BubbleSort(locations,
                 //                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
 
-                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
-                                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
-
-                //SortAlgorithms.MergeSort(locations,
+                //SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
                 //                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+
+                SortAlgorithms.MergeSort(locations,
+                                        (p1, p2) => DateTime.Compare(p1.CreatedAt, p2.CreatedAt));
+                stopwatch.Stop();
             }
             else if (selectedValue == "Alphabetically")
             {
+                stopwatch.Start();
                 //SortAlgorithms.BubbleSort(locations,
                 //                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
 
-                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
-                                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
-
-                //SortAlgorithms.MergeSort(locations,
+                //SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
                 //                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+
+                SortAlgorithms.MergeSort(locations,
+                                        (p1, p2) => string.Compare(p1.LocationName, p2.LocationName));
+                stopwatch.Stop();
             }
             else if (selectedValue == "Date & time (reverse)")
+
             {
+                stopwatch.Start();
                 //SortAlgorithms.BubbleSort(locations,
                 //                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
 
-                SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
-                                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
-
-                //SortAlgorithms.MergeSort(locations,
+                //SortAlgorithms.QuickSort(locations, 0, locations.Count - 1,
                 //                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+
+                SortAlgorithms.MergeSort(locations,
+                                        (p1, p2) => DateTime.Compare(p2.CreatedAt, p1.CreatedAt));
+                stopwatch.Stop();
             }
 
 

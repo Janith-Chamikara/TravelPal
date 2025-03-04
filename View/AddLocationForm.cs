@@ -559,9 +559,11 @@ namespace TravelPal.UI
 //end rabin karp search
         */
 
-        
+
         //Boyer Moore Algorithm
 
+        //linear search
+        //comment
         private void SearchPreferencesBox_TextChanged(object sender, EventArgs e)
         {
             var searchText = searchPreferencesBox.Text.ToLower();
@@ -621,7 +623,7 @@ namespace TravelPal.UI
                 table[pattern[i]] = i;
             return table;
         }
-        
+
 
         private async void AddButton_Click(object sender, EventArgs e)
         {

@@ -94,7 +94,7 @@ namespace TravelPal.UI
                 Text = "Don't have an account yet? Sign up here",
                 ForeColor = Color.White,
                 Font = new Font("Arial", 10),
-                Location = new Point(15, 240),
+                Location = new Point(50, 240),
                 AutoSize = true
             };
             signUpLink.LinkColor = Color.White;
